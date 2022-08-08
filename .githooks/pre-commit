@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -eux
+set -o errexit
+set -o pipefail
+set -o nounset
+
+make \
+	fix \
+	format
+
+for FILE in $(git diff --name-status --staged \
+			| grep .go \
+			| grep --invert-match "D" \
+			| grep --invert-match "R" \
+			| cut -d$'\t' -f 2); do
+	git add "${FILE}"
+done

@@ -1,0 +1,90 @@
+linters:
+  enable-all: true
+  fast: true
+
+linters-settings:
+  funlen:
+    # Checks the number of lines in a function.
+    # If lower than 0, disable the check.
+    # Default: 60
+    lines: -1
+    # Checks the number of statements in a function.
+    # If lower than 0, disable the check.
+    # Default: 40
+    statements: -1
+  gci:
+    # DEPRECATED: use `sections` and `prefix(github.com/org/project)` instead.
+    local-prefixes: github.com/ShahoBashoki/evolution_go
+    # Checks that no inline Comments are present.
+    # Default: false
+    no-inline-comments: true
+    # Checks that no prefix Comments(comment lines above an import) are present.
+    # Default: false
+    no-prefix-comments: true
+    # Section configuration to compare against.
+    # Section names are case-insensitive and may contain parameters in ().
+    # Default: ["standard", "default"]
+    sections:
+      - standard # Captures all standard packages if they do not match another section.
+      - default # Contains all imports that could not be matched to another section type.
+      - comment(your text here) # Prints the specified indented comment.
+      - newLine # Prints an empty line
+      - prefix(github.com/ShahoBashoki/evolution_go) # Groups all imports with the specified Prefix.
+    # Separators that should be present between sections.
+    # Default: ["newLine"]
+    section-separators:
+      - newLine
+  lll:
+    # Max line length, lines longer will be reported.
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option.
+    # Default: 120.
+    line-length: 320
+    # Tab width in spaces.
+    # Default: 1
+    # tab-width: 1
+  gomnd:
+    # List of enabled checks, see https://github.com/tommy-muehle/go-mnd/#checks for description.
+    # Default: ["argument", "case", "condition", "operation", "return", "assign"]
+    # checks:
+    #   - argument
+    #   - case
+    #   - condition
+    #   - operation
+    #   - return
+    #   - assign
+    # List of numbers to exclude from analysis.
+    # The numbers should be written as string.
+    # Values always ignored: "1", "1.0", "0" and "0.0"
+    # Default: []
+    ignored-numbers:
+      - "5"
+      - "10"
+      - "13"
+    # List of file patterns to exclude from analysis.
+    # Values always ignored: `.+_test.go`
+    # Default: []
+    # ignored-files:
+    #   - 'magic1_.*.go'
+    # List of function patterns to exclude from analysis.
+    # Values always ignored: `time.Date`
+    # Default: []
+    # ignored-functions:
+    #   - 'math.*'
+    #   - 'http.StatusText'
+  tagliatelle:
+    # Check the struck tag name case.
+    case:
+      # Use the struct field name to check the name of the struct tag.
+      # Default: false
+      # use-field-name: true
+      # `camel` is used for `json` and `yaml` (can be overridden)
+      # Default: {}
+      rules:
+        # Any struct tag type can be used.
+        # Support string case: `camel`, `pascal`, `kebab`, `snake`, `goCamel`, `goPascal`, `goKebab`, `goSnake`, `upper`, `lower`
+        json: snake
+        # yaml: camel
+        # xml: camel
+        # bson: camel
+        # avro: snake
+        # mapstructure: kebab
