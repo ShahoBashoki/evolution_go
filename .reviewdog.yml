@@ -1,0 +1,53 @@
+runner:
+  # <tool-name>:
+  #   cmd: <command> # (required)
+  #   errorformat: # (optional if you use `format`)
+  #     - <list of errorformat>
+  #   format: <format-name> # (optional if you use `errorformat`. e.g. golint,rdjson,rdjsonl)
+  #   level: <level> # (optional. same as -level flag. [info,warning,error])
+  #   name: <tool-name> # (optional. you can overwrite <tool-name> defined by runner key)
+
+  errcheck:
+    # cmd: errcheck -asserts -ignoretests -blank $(go list ./... | grep -v /vendor/)
+    cmd: make errcheck
+    errorformat:
+      - "%f:%l:%c:%m"
+  
+  golangci-lint:
+    cmd: make golangci-lint
+    # errorformat:
+    #   - '%E%f:%l:%c: %m'
+    #   - '%E%f:%l: %m'
+    #   - '%C%.%#'
+    format: golangci-lint
+
+  # golint:
+  #   cmd: make golint
+  #   format: golint
+
+  gosec:
+    cmd: make gosec
+    format: gosec
+
+  govet:
+    cmd: make govet
+    format: govet
+
+  # misspell:
+  #   cmd: misspell $(git ls-files)
+  #   errorformat:
+  #     - "%f:%l:%c: %m"
+
+  revive:
+    cmd: make revive
+    format: golint
+
+  staticcheck:
+    cmd: make staticcheck
+    errorformat:
+      - "%f:%l:%c: %m"
+
+  # unparam:
+  #   cmd: unparam $(go list ./... | grep -v /vendor/)
+  #   errorformat:
+  #     - "%f:%l:%c: %m"
