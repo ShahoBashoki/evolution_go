@@ -27,8 +27,56 @@
 
 services:
 
+  pgadmin4:
+    container_name: evolution-pgadmin4
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+      - PGADMIN_LISTEN_ADDRESS=0.0.0.0
+      - PGADMIN_LISTEN_PORT=5050
+    expose:
+      - 5050
+    healthcheck:
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      test: wget --no-verbose --spider --tries=1 http://pgadmin4:5050
+      timeout: 5s
+    image: dpage/pgadmin4:6.10
+    labels:
+      namespace: pgadmin4
+    # logging: *default-logging
+    ports:
+      - 5050:5050
+    restart: "always"
+    volumes:
+      - ./docker/pgadmin4.json:/pgadmin4/servers.json:ro
+      - pgadmin:/var/lib/pgadmin
+
+  postgres:
+    container_name: evolution-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    healthcheck:
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+      timeout: 5s
+    image: postgres:14.5
+    ports:
+      - 5432:5432
+    restart: "always"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   swagger-filebuilder:
-    container_name: swagger-filebuilder
+    container_name: evolution-swagger-filebuilder
     entrypoint: sh ./script/swagger-filebuilder.sh true
     # healthcheck:
     #   interval: 10s
@@ -47,7 +95,7 @@ services:
 
   swagger-ui:
     # build: ./docker/swagger-ui.Dockerfile
-    container_name: swagger-ui
+    container_name: evolution-swagger-ui
     depends_on:
       swagger-filebuilder:
         condition: service_completed_successfully
@@ -80,6 +128,7 @@ services:
       - ./doc/swagger.json:/app/swagger.json:ro
 
 volumes:
+  pgadmin:
+  pgdata:
   swagger-filebuilder:
   swagger-ui:
-  
